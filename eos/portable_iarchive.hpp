@@ -103,8 +103,11 @@
 #if BOOST_VERSION < 103600
 #include <boost/integer/endian.hpp>
 #include <boost/math/fpclassify.hpp>
-#else
+#elif BOOST_VERSION < 104900
 #include <boost/spirit/home/support/detail/integer/endian.hpp>
+#include <boost/spirit/home/support/detail/math/fpclassify.hpp>
+#else
+#include <boost/spirit/home/support/detail/endian.hpp>
 #include <boost/spirit/home/support/detail/math/fpclassify.hpp>
 #endif
 
@@ -133,6 +136,12 @@ namespace eos {
 
 	// forward declaration
 	class portable_iarchive;
+
+#if BOOST_VERSION < 104900
+   namespace endian_ns = boost::detail;
+#else
+   namespace endian_ns = boost::spirit::detail;
+#endif
 
 	typedef boost::archive::basic_binary_iprimitive<
 		portable_iarchive
@@ -264,7 +273,7 @@ namespace eos {
 
 				// load the value from little endian - is is then converted
 				// to the target type T and fits it because size <= sizeof(T)
-				t = boost::detail::load_little_endian<T, sizeof(T)>(&temp);
+				t = endian_ns::load_little_endian<T, sizeof(T)>(&temp);
 			}
 
 			else t = 0; // zero optimization

@@ -103,8 +103,11 @@
 #if BOOST_VERSION < 103600
 #include <boost/integer/endian.hpp>
 #include <boost/math/fpclassify.hpp>
-#else
+#elif BOOST_VERSION < 104900
 #include <boost/spirit/home/support/detail/integer/endian.hpp>
+#include <boost/spirit/home/support/detail/math/fpclassify.hpp>
+#else
+#include <boost/spirit/home/support/detail/endian.hpp>
 #include <boost/spirit/home/support/detail/math/fpclassify.hpp>
 #endif
 
@@ -133,6 +136,13 @@ namespace eos {
 
 	// forward declaration
 	class portable_oarchive;
+
+#if BOOST_VERSION < 104900
+   namespace endian_ns = boost::detail;
+#else
+   namespace endian_ns = boost::spirit::detail;
+#endif
+
 
 	typedef boost::archive::basic_binary_oprimitive<
 		portable_oarchive
@@ -241,7 +251,7 @@ namespace eos {
 
 				// we choose to use little endian because this way we just
 				// save the first size bytes to the stream and skip the rest
-				boost::detail::store_little_endian<T, sizeof(T)>(&temp, t);
+				endian_ns::store_little_endian<T, sizeof(T)>(&temp, t);
 				save_binary(&temp, size);
 			}
 			// zero optimization
