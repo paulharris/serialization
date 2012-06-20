@@ -242,8 +242,13 @@ namespace eos {
 				// examine the number of bytes
 				// needed to represent the number
 				signed char size = 0;
-				do { temp >>= CHAR_BIT; ++size; } 
-				while (temp != 0 && temp != (T) -1);
+				if (sizeof(temp)*8 <= CHAR_BIT)  // short circuit for chars, to avoid clang warning
+					size = 1;
+				else
+				{
+					do { temp >>= CHAR_BIT; ++size; } 
+					while (temp != 0 && temp != (T) -1);
+				}
 
 				// encode the sign bit into the size
 				save_signed_char(t > 0 ? size : -size);
