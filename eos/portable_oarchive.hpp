@@ -404,6 +404,10 @@ BOOST_SERIALIZATION_REGISTER_ARCHIVE(eos::portable_oarchive)
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(eos::polymorphic_portable_oarchive)
 #endif
 
+#if EOS_ENABLE_ARRAY_OPTIMIZATION
+   BOOST_SERIALIZATION_USE_ARRAY_OPTIMIZATION(eos::portable_oarchive)
+#endif
+
 // if you include this header multiple times and your compiler is picky
 // about multiple template instantiations (eg. gcc is) then you need to
 // define NO_EXPLICIT_TEMPLATE_INSTANTIATION before every include but one
